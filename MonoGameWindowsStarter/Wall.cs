@@ -7,19 +7,21 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
+
 namespace MonoGameWindowsStarter
 {
     class Wall
     {
 
         public Rectangle bounds;
+
         Texture2D texture;
         Game1 game;
 
-        public Wall(Game1 game)
+        public Wall(int i, int j)
         {
-            bounds = new Rectangle(120, 120, 64, 64);
-            this.game = game;
+            bounds = new Rectangle(j*32, i*32, 32, 32);
+            
         }
 
         public void LoadContent(ContentManager content)

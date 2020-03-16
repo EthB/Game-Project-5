@@ -10,7 +10,7 @@ using Microsoft.Xna.Framework.Content;
 
 namespace MonoGameWindowsStarter
 {
-    class Player
+    public class Player
     {
 
         public Rectangle bounds;

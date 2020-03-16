@@ -2,6 +2,10 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
+using System;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace MonoGameWindowsStarter
 {
@@ -14,7 +18,9 @@ namespace MonoGameWindowsStarter
         SpriteBatch spriteBatch;
 
         Player player;
-        Wall[,] walls;
+        //Wall[,] walls;
+        Array mapArray;
+        Map map;
         
 
         public Game1()
@@ -46,18 +52,19 @@ namespace MonoGameWindowsStarter
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             player = new Player(this);
-            walls = new Wall[64,64];
-            walls[0, 0] = new Wall(this);
+            mapArray = Content.Load<Array>("map");
+            map = new Map(mapArray);
             // TODO: use this.Content to load your game content here
             player.LoadContent(Content);
             //load wallmap into walls list
-            foreach(Wall w in walls)
-            {
-                if (w != null)
-                {
-                    w.LoadContent(Content);
-                }
-            }
+            //foreach(Wall w in walls)
+            //{
+            //    if (w != null)
+            //    {
+            //        w.LoadContent(Content);
+            //    }
+            //}
+            map.LoadContent(Content);
         }
 
         /// <summary>
@@ -76,52 +83,17 @@ namespace MonoGameWindowsStarter
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            var keyboard = Keyboard.GetState();
+            //var keyboard = Keyboard.GetState();
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
             // TODO: Add your update logic here
+            map.Update(gameTime, player);
             player.Update(gameTime);
-            foreach(Wall w in walls)
-            {
-                if (w != null)
-                {
-                    w.Update(gameTime);
-                    if (w.bounds.Intersects(player.bounds))
-                    {
-                        if (keyboard.IsKeyDown(Keys.Up))
-                        {
-                            player.up = false;
-                            player.bounds.Y += 1;
-                        }
-                        else { player.up = true; }
-                        if (keyboard.IsKeyDown(Keys.Down))
-                        {
-                            player.down = false;
-                            player.bounds.Y -= 1;
-                        }
-                        else { player.down = true; }
-                        if (keyboard.IsKeyDown(Keys.Left))
-                        {
-                            player.left = false;
-                            player.bounds.X += 1;
-                        }
-                        else { player.left = true; }
-                        if (keyboard.IsKeyDown(Keys.Right))
-                        {
-                            player.right = false;
-                            player.bounds.X -= 1;
-                        }
-                        else { player.right = true; }
-                    }
-                    else { player.up = true;
-                        player.down = true;
-                        player.left = true;
-                        player.right = true;
-                    }
-                }
 
-            }
+            
+
+            
 
 
             base.Update(gameTime);
@@ -137,13 +109,7 @@ namespace MonoGameWindowsStarter
             spriteBatch.Begin();
             // TODO: Add your drawing code here
             player.Draw(spriteBatch);
-            foreach(Wall w in walls)
-            {
-                if (w != null)
-                {
-                    w.Draw(spriteBatch);
-                }
-            }
+            map.Draw(spriteBatch);
             base.Draw(gameTime);
 
             spriteBatch.End();
