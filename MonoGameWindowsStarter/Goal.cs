@@ -10,20 +10,18 @@ using Microsoft.Xna.Framework.Content;
 
 namespace MonoGameWindowsStarter
 {
-    public class Wall : Tile
+    class Goal : Tile
     {
-
         Rectangle bounds;
         string type;
         Texture2D texture;
-        Game1 game;
 
         public Rectangle Bounds => bounds;
         public string Type => type;
-        public Wall(int i, int j)
+        public Goal(int i, int j)
         {
-            bounds = new Rectangle(j*32, i*32, 32, 32);
-            type = "wall";
+            bounds = new Rectangle(j * 32, i * 32, 32, 32);
+            type = "goal";
         }
 
         public  void LoadContent(ContentManager content)
@@ -33,12 +31,12 @@ namespace MonoGameWindowsStarter
 
         public  void Update(GameTime gameTime)
         {
-            
+
         }
 
         public  void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, bounds, Color.White);
+            spriteBatch.Draw(texture, bounds, Color.Red);
         }
     }
 }

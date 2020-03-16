@@ -23,14 +23,14 @@ namespace ContentExtension
     /// </summary>
 
     [ContentImporter(".mpp", DisplayName = "Map Importer", DefaultProcessor = "MapProcessor")]
-    public class MapImporter : ContentImporter<TInput>
+    public class MapImporter : ContentImporter<string>
     {
 
-        public override TInput Import(string filename, ContentImporterContext context)
+        public override string Import(string filename, ContentImporterContext context)
         {
-            Console.WriteLine("HELLO");
+            //Console.WriteLine("HELLO");
 
-            TInput str = File.ReadAllText(filename);
+            string str = File.ReadAllText(filename);
 
             return str;
             

@@ -14,21 +14,21 @@ using TOutput = System.String;
 namespace ContentExtension
 {
     [ContentTypeWriter]
-    public class MapContentWriter : ContentTypeWriter<TInput>
+    public class MapContentWriter : ContentTypeWriter<MapContent>
     {
-        protected override void Write(ContentWriter output, TInput value)
+        protected override void Write(ContentWriter output, MapContent value)
         {
             //output.Write(value); 
-            Console.WriteLine("Testing here too");
-            output.Write(value);
+            //Console.WriteLine("Testing here too");
+            output.Write(value.source);
             //Console.WriteLine("And here as well");
 
         }
 
-        public override string GetRuntimeType(TargetPlatform targetPlatform)
-        {
-            return typeof(TInput).AssemblyQualifiedName;
-        }
+        //public override string GetRuntimeType(TargetPlatform targetPlatform)
+        //{
+        //    return typeof(MapContent).AssemblyQualifiedName;
+        //}
 
         public override string GetRuntimeReader(TargetPlatform targetPlatform)
         {

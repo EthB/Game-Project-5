@@ -19,8 +19,12 @@ namespace MonoGameWindowsStarter
 
         Player player;
         //Wall[,] walls;
-        Array mapArray;
+        string mapArray;
         Map map;
+        SpriteFont bigFont;
+        SpriteFont timeFont;
+        bool win;
+        double time;
         
 
         public Game1()
@@ -49,11 +53,14 @@ namespace MonoGameWindowsStarter
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
+            win = false;
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
+            bigFont = Content.Load<SpriteFont>("bigFont");
+            timeFont = Content.Load<SpriteFont>("timeFont");
             player = new Player(this);
-            mapArray = Content.Load<Array>("map");
+            mapArray = Content.Load<string>("map");
             map = new Map(mapArray);
+            //map = new Map(mapArray);
             // TODO: use this.Content to load your game content here
             player.LoadContent(Content);
             //load wallmap into walls list
@@ -65,6 +72,7 @@ namespace MonoGameWindowsStarter
             //    }
             //}
             map.LoadContent(Content);
+            time = 0;
         }
 
         /// <summary>
@@ -83,12 +91,96 @@ namespace MonoGameWindowsStarter
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+
             //var keyboard = Keyboard.GetState();
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            if (!win)
+            {
+                time = gameTime.TotalGameTime.TotalSeconds;
+                time = Math.Truncate(time * 1000) / 1000;
+            }
             // TODO: Add your update logic here
-            map.Update(gameTime, player);
+            //map.Update(gameTime, player);
+
+            var keyboard = Keyboard.GetState();
+            for (int i = 0; i < 15; i++)
+            {
+                for (int j = 0; j < 25; j++)
+                {
+                    if (map.walls[i, j] != null)
+                    {
+                        //Tile tempwall = map.walls[i, j];
+
+                        map.walls[i,j].Update(gameTime);
+                        if (map.walls[i, j].Bounds.Intersects(player.bounds))
+                        {
+                            if (map.walls[i, j].Type.Equals("wall"))
+                            {
+                                player.moving = false;
+
+                                if (player.direction == 0)
+                                {
+                                    player.bounds.X += 1;
+                                }
+                                else if (player.direction == 1)
+                                {
+                                    player.bounds.Y += 1;
+                                }
+                                else if (player.direction == 2)
+                                {
+                                    player.bounds.X -= 1;
+                                }
+                                else if (player.direction == 3)
+                                {
+                                    player.bounds.Y -= 1;
+                                }
+                            }
+                            else if (map.walls[i, j].Type.Equals("goal"))
+                            {
+                                win = true;
+                            }
+
+                            /*if (keyboard.IsKeyDown(Keys.Up))
+                            {
+                                player.up = false;
+                                //player.bounds.Y += 1;
+                            }
+                            //else { player.up = true; }
+                            if (keyboard.IsKeyDown(Keys.Down))
+                            {
+                                player.down = false;
+                                //player.bounds.Y -= 1;
+                            }
+                            //else { player.down = true; }
+                            if (keyboard.IsKeyDown(Keys.Left))
+                            {
+                                player.left = false;
+                                //player.bounds.X += 1;
+                            }
+                            //else { player.left = true; }
+                            if (keyboard.IsKeyDown(Keys.Right))
+                            {
+                                player.right = false;
+                                //player.bounds.X -= 1;
+                            }
+                            //else { player.right = true; }*/
+                        }
+                        /*else
+                        {
+                            player.up = true;
+                            player.down = true;
+                            player.left = true;
+                            player.right = true;
+                            player.color = Color.Yellow;
+                        }*/
+                    }
+
+                }
+            }
+
+
             player.Update(gameTime);
 
             
@@ -107,9 +199,15 @@ namespace MonoGameWindowsStarter
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin();
+            
             // TODO: Add your drawing code here
             player.Draw(spriteBatch);
             map.Draw(spriteBatch);
+            if (win)
+            {
+                spriteBatch.DrawString(bigFont, "YOU WIN", new Vector2(300, 200), Color.White);
+            }
+            spriteBatch.DrawString(timeFont, "Time: " + time.ToString(), new Vector2(34, 34), Color.White) ;
             base.Draw(gameTime);
 
             spriteBatch.End();

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,18 +14,47 @@ namespace MonoGameWindowsStarter
     
     public class Map
     {
-        Wall[,] walls;
+        public Tile[,] walls;
 
-        public Map(Array array)
+        public Map(string input)
         {
-            walls = new Wall[15, 25];
-            for(int i =0; i<16; i++)
+            char[,] output = new char[15, 25];
+            string[] str = input.Split('\n');
+            for (int i = 0; i < 15; i++)
             {
-                for(int j=0; j<26; j++)
+                char[] b = new char[str[i].Length];
+                using (StringReader sr = new StringReader(str[i]))
                 {
-                    if ((bool)array.GetValue(i,j) == true)
+                    sr.Read(b, 0, 25);
+
+                }
+                for (int j = 0; j < 25; j++)
+                {
+
+                    //output[i, j] = Convert.ToBoolean(int.Parse(b[j].ToString()));
+                    output[i, j] = b[j];
+                    //Console.WriteLine("TEST");
+                    Console.Write(output[i, j]);
+
+
+                }
+                //Console.WriteLine(b.Length);
+
+            }
+
+
+            walls = new Tile[15, 25];
+            for(int i =0; i<15; i++)
+            {
+                for(int j=0; j<25; j++)
+                {
+                    if (output[i,j].Equals('1'))
                     {
                         walls[i, j] = new Wall(i, j);
+                    }
+                    else if (output[i, j].Equals('2'))
+                    {
+                        walls[i, j] = new Goal(i, j);
                     }
                 }
             }
@@ -32,9 +62,9 @@ namespace MonoGameWindowsStarter
 
         public void LoadContent(ContentManager content)
         {
-            for (int i = 0; i < 16; i++)
+            for (int i = 0; i < 15; i++)
             {
-                for (int j = 0; j < 26; j++)
+                for (int j = 0; j < 25; j++)
                 {
                     if (walls[i, j] != null)
                     {
@@ -47,54 +77,7 @@ namespace MonoGameWindowsStarter
 
         public void Update(GameTime gameTime, Player player)
         {
-            var keyboard = Keyboard.GetState();
-            for (int i = 0; i < 16; i++)
-            {
-                for (int j = 0; j < 26; j++)
-                {
-                    if (walls[i, j] != null)
-                    {
-                        Wall tempwall = walls[i, j];
-
-                        tempwall.Update(gameTime);
-                        if (tempwall.bounds.Intersects(player.bounds))
-                        {
-                            if (keyboard.IsKeyDown(Keys.Up))
-                            {
-                                player.up = false;
-                                player.bounds.Y += 1;
-                            }
-                            else { player.up = true; }
-                            if (keyboard.IsKeyDown(Keys.Down))
-                            {
-                                player.down = false;
-                                player.bounds.Y -= 1;
-                            }
-                            else { player.down = true; }
-                            if (keyboard.IsKeyDown(Keys.Left))
-                            {
-                                player.left = false;
-                                player.bounds.X += 1;
-                            }
-                            else { player.left = true; }
-                            if (keyboard.IsKeyDown(Keys.Right))
-                            {
-                                player.right = false;
-                                player.bounds.X -= 1;
-                            }
-                            else { player.right = true; }
-                        }
-                        else
-                        {
-                            player.up = true;
-                            player.down = true;
-                            player.left = true;
-                            player.right = true;
-                        }
-                    }
-
-                }
-            }
+            
         }
 
         
@@ -104,9 +87,9 @@ namespace MonoGameWindowsStarter
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            for (int i = 0; i < 16; i++)
+            for (int i = 0; i < 15; i++)
             {
-                for (int j = 0; j < 26; j++)
+                for (int j = 0; j < 25; j++)
                 {
                         if (walls[i, j] != null)
                         {

@@ -13,7 +13,7 @@ using TOutput = System.String;
 namespace ContentExtension
 {
     [ContentProcessor(DisplayName = "MapProcessor")]
-    public class MapProcessor : ContentProcessor<TInput, TOutput>
+    public class MapProcessor : ContentProcessor<string, MapContent>
     {
         /// <summary>
         /// Processes the raw .tsx XML and creates a TilesetContent
@@ -22,11 +22,15 @@ namespace ContentExtension
         /// <param name="input">The XML string</param>
         /// <param name="context">The pipeline context</param>
         /// <returns>A TilesetContent instance corresponding to the tsx input</returns>
-        public override TOutput Process(TInput input, ContentProcessorContext context)
+        public override MapContent Process(string input, ContentProcessorContext context)
         {
-            return input;
 
-            /*char[,] output = new char[15, 25];
+            MapContent content = new MapContent();
+            content.source = input;
+            return content;
+            //return input;
+
+           /* char[,] output = new char[15, 25];
             string[] str = input.Split('\n');
 
 
@@ -64,10 +68,13 @@ namespace ContentExtension
 
                 }
                 //Console.WriteLine(b.Length);
+                
             }
+            MapContent content = new MapContent();
+            content.source = output;
             //Console.Write(output.ToString());
-            Console.Write(input);
-            return input;*/
+            //Console.Write(input);
+            return content;*/
         }
     }
 }
