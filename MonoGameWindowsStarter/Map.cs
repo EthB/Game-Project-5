@@ -56,6 +56,10 @@ namespace MonoGameWindowsStarter
                     {
                         walls[i, j] = new Goal(i, j);
                     }
+                    else if (output[i, j].Equals('3'))
+                    {
+                        walls[i, j] = new FirePowerup(i, j);
+                    }
                 }
             }
         }

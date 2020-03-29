@@ -16,7 +16,7 @@ namespace MonoGameWindowsStarter
         public Rectangle bounds;
         Texture2D texture;
         Game1 game;
-        int speed = 5;
+        public int speed = 5;
         public bool right;
         public bool left;
         public bool down;
